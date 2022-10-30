@@ -3,18 +3,10 @@
 Created on Thu Aug 15 13:52:50 2019
 
 @author: Trung Duc Nguyen
-
-program for RNA folding and folgi
-
-input: the table of name_variant and sequence
-
-
-fold with wobble label
-add concreate structure
-add new_define_structure2
 """
 
-#%%
+#%% IMPORT LIBRARY
+
 import sys
 import pandas as pd
 import RNA
@@ -24,7 +16,7 @@ import re
 
 start = pd.Timestamp.now()
 
-#%% 1) fold using RNAfold
+#%% 1) FOLD RNA USING RNAfold
 
 df_input = pd.read_csv(sys.argv[1], sep = '\t', names = ['variant', 'seq'] ).set_index('variant')
 
@@ -42,7 +34,7 @@ df_output['dot_struct'] = df_output['seq'].map(lambda x: fold(x))
 print('Finish RNAfold...')
 
 
-#%% 2) forgi
+#%% 2) FORGI
 
 def make_define_struct(dot_struct):
     x = cgb.BulgeGraph.from_dotbracket(dot_struct)
@@ -54,7 +46,7 @@ df_output['forgi_struct'] = df_output['dot_struct'].map(lambda x: ' '.join([str(
 print('Finish forgi...')
 
 
-#%% 3) make new define struct
+#%% 3) MAKE NEW DEFINE STRUCTURE
 
 '''
 need to define:
@@ -160,7 +152,7 @@ df_output[['new_define_struct1','new_define_struct2']] = df_output.apply(lambda 
 
 print('Finish making new structure...') 
 
-#%% 4) make new define struct wobble
+#%% 4) MAKE NEW DEFINE STRUCTURE WOBBLE
 
 def make_new_define_struct_with_wobble (seq, forgi_struct, new_define_struct2):
 
@@ -195,7 +187,8 @@ df_output['new_define_struct_wobble'] = df_output.apply(lambda x: make_new_defin
 print('Finish making new structure with wobbles...')  
  
 
-#%% 5) concrete structure
+#%% 5) CONCRETE STRUCTURE
+
 def find_mismatch(struct):
 
 
@@ -339,7 +332,7 @@ df_output['concrete_struct'] = df_output.apply(lambda x:
 
 print('Finish making concrete structure...') 
 
-#%%
+#%% 6) SAVE RNA STRUCTURE
 
 # print(df_output.head())
 df_output.reset_index().to_csv( sys.argv[2], sep = '\t', header = True, index = False)

@@ -9,6 +9,12 @@ Created on Wed Mar 24 11:15:40 2021
 
 import itertools
 import pandas as pd
+import os
+
+#%%
+
+os.mkdir('./processed_table/')
+
 
 #%%
 
